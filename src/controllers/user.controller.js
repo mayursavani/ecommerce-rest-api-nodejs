@@ -52,8 +52,9 @@ const getAllUser = asyncHandler(async (req, res) => {
 // get single user
 
 const getUser = asyncHandler(async (req, res) => {
+  const id = req.user._id;
   try {
-    const user = await User.findOne({ _id: req.params.id });
+    const user = await User.findOne({ _id: id });
     res.json(user);
   } catch (err) {
     throw new Error(err);
@@ -63,8 +64,9 @@ const getUser = asyncHandler(async (req, res) => {
 //delete a single user
 
 const deleteUser = asyncHandler(async (req, res) => {
+  const id = req.user._id;
   try {
-    const deleteUser = await User.findByIdAndDelete(req.params.id);
+    const deleteUser = await User.findByIdAndDelete(id);
     res.json(deleteUser);
   } catch (err) {
     throw new Error(err);
@@ -73,9 +75,10 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 //update a user
 const updateUser = asyncHandler(async (req, res) => {
+  const id = req.user._id;
   try {
     const updateUser = await User.findByIdAndUpdate(
-      req.params.id,
+      id,
       {
         firstName: req?.body?.firstName,
         lastName: req?.body?.lastName,
