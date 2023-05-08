@@ -1,12 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dbConnect = require("./config/dbConnect");
+const dbConnect = require("./src/config/dbConnect");
 const app = express();
+const cors=require('./')
 const bodyParser = require("body-parser");
-const config = require("./config/config");
+const config = require("./src/config/config");
 const PORT = config.PORT || 5000;
-const authRouter = require("./routes/auth.routes");
-const { notAFound, errorHandlers } = require("./middlewares/errorHandler");
+const authRouter = require("./src/routes/auth.routes");
+const { notAFound, errorHandlers } = require("./src/middlewares/errorHandler");
 
 dbConnect();
 
