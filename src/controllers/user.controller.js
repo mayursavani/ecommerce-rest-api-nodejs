@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const User = require("../models/user.model");
 const asyncHandler = require("express-async-handler");
 const jwtToken = require("../config/jwttoken");
+const isValidMongoDBId = require("../utils/validatemongoID");
 
 const createUser = asyncHandler(async (req, res) => {
   const email = req.body.email;
@@ -53,6 +54,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 
 const getUser = asyncHandler(async (req, res) => {
   const id = req.user._id;
+  isValidMongoDBId(id);
   try {
     const user = await User.findOne({ _id: id });
     res.json(user);
@@ -65,6 +67,7 @@ const getUser = asyncHandler(async (req, res) => {
 
 const deleteUser = asyncHandler(async (req, res) => {
   const id = req.user._id;
+  isValidMongoDBId(id);
   try {
     const deleteUser = await User.findByIdAndDelete(id);
     res.json(deleteUser);
@@ -76,6 +79,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 //update a user
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.user._id;
+  isValidMongoDBId(id);
   try {
     const updateUser = await User.findByIdAndUpdate(
       id,
@@ -91,6 +95,38 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+//block user
+const blockUser = asyncHandler(async (req, res) => {
+  isValidMongoDBId(req.params.id);
+  try {
+    const blockUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        active: false,
+      },
+      { new: true }
+    );
+    res.json(blockUser);
+  } catch {}
+});
+
+//unblock user
+
+const unblockUser = asyncHandler(async (req, res) => {
+  isValidMongoDBId(req.params.id);
+  try {
+    const unblockUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        active: true,
+      },
+      { new: true }
+    );
+    res.json(unblockUser);
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 module.exports = {
   createUser,
   validateLoginUserController,
@@ -98,4 +134,6 @@ module.exports = {
   getUser,
   deleteUser,
   updateUser,
+  blockUser,
+  unblockUser,
 };
