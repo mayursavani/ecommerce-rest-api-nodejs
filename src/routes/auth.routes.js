@@ -11,6 +11,8 @@ const {
   unblockUser,
   handleRefreshToken,
   logout,
+  updatePassword,
+  forgotPasswordToken,
 } = require("../controllers/user.controller");
 const middlewares = require("../middlewares/authentication");
 
@@ -34,4 +36,10 @@ router.patch(
 );
 router.get("/refresh", handleRefreshToken);
 router.get("/logout", logout);
+router.patch("/update-password", middlewares.authMiddleware, updatePassword);
+router.post(
+  "/forgot-password-token",
+  middlewares.authMiddleware,
+  forgotPasswordToken
+);
 module.exports = router;
