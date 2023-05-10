@@ -6,6 +6,8 @@ const config = require("./src/config/config");
 const PORT = config.PORT || 5000;
 const cookieParser = require("cookie-parser");
 const authRouter = require("./src/routes/auth.routes");
+const productRouter = require("./src/routes/product.routes");
+const morgan = require("morgan");
 const { notAFound, errorHandlers } = require("./src/middlewares/errorHandler");
 
 dbConnect();
@@ -17,7 +19,9 @@ dbConnect();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(morgan("dev"));
 app.use("/api/user", authRouter);
+app.use("/api/product", productRouter);
 app.use(errorHandlers);
 // app.use(notAFound);
 
