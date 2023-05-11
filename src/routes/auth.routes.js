@@ -13,6 +13,7 @@ const {
   logout,
   updatePassword,
   forgotPasswordToken,
+  resetPassword,
 } = require("../controllers/user.controller");
 const middlewares = require("../middlewares/authentication");
 
@@ -41,5 +42,10 @@ router.post(
   "/forgot-password-token",
   middlewares.authMiddleware,
   forgotPasswordToken
+);
+router.put(
+  "/reset-password/:token",
+  middlewares.authMiddleware,
+  resetPassword
 );
 module.exports = router;

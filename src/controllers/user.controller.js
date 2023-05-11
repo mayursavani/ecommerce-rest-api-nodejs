@@ -7,6 +7,7 @@ const isValidMongoDBId = require("../utils/validatemongoID");
 const generateRefreshToken = require("../config/refreshToken");
 const config = require("../config/config");
 const { sendEmail } = require("./email-sender.controller");
+const crypto = require("crypto");
 
 const createUser = asyncHandler(async (req, res) => {
   const email = req.body.email;
@@ -230,6 +231,29 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   }
 });
 
+const resetPassword = asyncHandler(async (req, res) => {
+  if (!req.params.token || !req.body.password) {
+    throw new Error("required parameter password or token is missing");
+  }
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    throw new Error("Either invalid Token or Token expired");
+  }
+  user.password = req.body.password;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  user.passwordChangedAt = Date.now();
+  await user.save();
+  res.json(user);
+});
+
 module.exports = {
   createUser,
   validateLoginUserController,
@@ -243,4 +267,5 @@ module.exports = {
   logout,
   updatePassword,
   forgotPasswordToken,
+  resetPassword,
 };
