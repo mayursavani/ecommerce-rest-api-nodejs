@@ -7,6 +7,7 @@ const PORT = config.PORT || 5000;
 const cookieParser = require("cookie-parser");
 const authRouter = require("./src/routes/auth.routes");
 const productRouter = require("./src/routes/product.routes");
+const blogRouter = require("./src/routes/blog.routes");
 const morgan = require("morgan");
 const { notAFound, errorHandlers } = require("./src/middlewares/errorHandler");
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/blog", blogRouter);
 app.use(errorHandlers);
 // app.use(notAFound);
 

@@ -57,7 +57,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
   try {
     const updateProduct = await Product.findByIdAndUpdate(
-      { _id: req.params.id },
+      req.params.id,
       req.body,
       { new: true }
     );
